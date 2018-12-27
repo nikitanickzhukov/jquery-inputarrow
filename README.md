@@ -79,12 +79,12 @@ $('input').inputarrow({
 ```
 $('input').inputarrow({
     renderPrev: function(input) {
-        return $('<span class="prev">prev</span>').insertBefore(input);
+        return $('<span class="custom-prev">prev</span>').insertBefore(input);
     },
     renderNext: function(input) {
-        return $('<span class="next">next</span>').insertAfter(input);
+        return $('<span class="custom-next">next</span>').insertAfter(input);
     },
-    disabledClassName: 'disabled'
+    disabledClassName: 'custom-disabled'
 });
 ```
 
@@ -92,17 +92,23 @@ $('input').inputarrow({
 ```
 $('input').inputarrow({
     encodeValue: function(value) {
+        if (value === 'no bananas') {
+            return 0;
+        }
         return value.replace(/^(.*?)\sbananas?$/, '$1');
     },
     decodeValue: function(value) {
+        if (value === 0) {
+            return 'no bananas';
+        }
         var unit = (value === 1) ? 'banana' : 'bananas';
         return value + ' ' + unit;
     },
-    onChange: function(value) {
-        console.info('change', value);
+    onChange: function(newValue, oldValue) {
+        console.info('change from', oldValue, 'to', newValue);
     },
-    onIterate: function(value) {
-        console.info('iterate', value);
-    },
+    onIterate: function(newValue, oldValue) {
+        console.info('iterate from', oldValue, 'to', newValue);
+    }
 });
 ```

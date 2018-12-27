@@ -98,9 +98,11 @@
                     return value.replace(/^(.*?)\sbananas?$/, '$1');
                 },
                 decodeValue: function(value) {
+                    if (value === 0) {
+                        return 'no bananas';
+                    }
                     var unit = (value === 1) ? 'banana' : 'bananas';
-                    var text = (value === 0) ? 'no bananas' : value + ' ' + unit;
-                    return text;
+                    return value + ' ' + unit;
                 },
                 onChange: function(newValue, oldValue) {
                     console.info('change from', oldValue, 'to', newValue);
