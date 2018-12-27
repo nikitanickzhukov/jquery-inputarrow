@@ -7,15 +7,34 @@
         <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     </head>
     <body>
-        <p style="text-align: center;">
-            <input type="text" name="" value="0 руб." class="inputarrow">
+        <h2>Simple initialization</h2>
+        <p>
+            <input type="text" name="" value="0" class="inputarrow" id="simple">
+        </p>
+        <h2>Initialization with options</h2>
+        <p>
+            <input type="text" name="" value="0" class="inputarrow" id="options">
+        </p>
+        <h2>Initialization with custom rendering</h2>
+        <p>
+            <input type="text" name="" value="0" class="inputarrow" id="rendering">
+        </p>
+        <h2>Initialization with custom value processing</h2>
+        <p>
+            <input type="text" name="" value="no bananas" class="inputarrow" id="processing">
         </p>
 
         <style>
+            body {
+                text-align: center;
+            }
+
             .inputarrow-prev,
             .inputarrow-next {
                 color: #000;
                 cursor: pointer;
+                -moz-user-select: none;
+                -webkit-user-select: none;
                 user-select: none;
             }
             .inputarrow-prev {
@@ -28,30 +47,67 @@
                 color: #aaa;
                 cursor: not-allowed;
             }
+
+            .custom-prev,
+            .custom-next {
+                color: #00c;
+                font-weight: bold;
+                cursor: pointer;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+            .custom-prev {
+                margin-right: 12px;
+            }
+            .custom-next {
+                margin-left: 12px;
+            }
+            .custom-disabled {
+                visibility: hidden;
+            }
         </style>
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="../dist/jquery.inputarrow.js"></script>
         <script>
-            $('.inputarrow').inputarrow({
-                min: -100,
+            $('#simple').inputarrow();
+
+            $('#options').inputarrow({
+                min: 0,
                 max: 100,
-                step: 1,
+                step: 5,
                 comma: true,
-                onChange: function(newValue, oldValue) {
-                    console.info('onChange', newValue, oldValue);
+                emptyOnMin: true
+            });
+
+            $('#rendering').inputarrow({
+                renderPrev: function(input) {
+                    return $('<span class="custom-prev">prev</span>').insertBefore(input);
                 },
-                onIterate: function(newValue, oldValue) {
-                    console.info('onIterate', newValue, oldValue);
+                renderNext: function(input) {
+                    return $('<span class="custom-next">next</span>').insertAfter(input);
                 },
+                disabledClassName: 'custom-disabled'
+            });
+
+            $('#processing').inputarrow({
                 encodeValue: function(value) {
+                    if (value === 'no bananas') {
+                        return 0;
+                    }
                     return value.replace(/^(.*?)\sbananas?$/, '$1');
                 },
                 decodeValue: function(value) {
-                    var unit = (value != 1) ? 'bananas' : 'banana';
-                    return value + ' ' + unit;
+                    var unit = (value === 1) ? 'banana' : 'bananas';
+                    var text = (value === 0) ? 'no bananas' : value + ' ' + unit;
+                    return text;
+                },
+                onChange: function(newValue, oldValue) {
+                    console.info('change from', oldValue, 'to', newValue);
+                },
+                onIterate: function(newValue, oldValue) {
+                    console.info('iterate from', oldValue, 'to', newValue);
                 }
-            }).on('change', function(e) {
-                console.info('change', this.value);
             });
         </script>
     </body>

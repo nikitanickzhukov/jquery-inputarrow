@@ -79,12 +79,12 @@ $('input').inputarrow({
 ```
 $('input').inputarrow({
     renderPrev: function(input) {
-        return $("<div class="prev">prev</div>).insertBefore(input);
+        return $('<span class="prev">prev</span>').insertBefore(input);
     },
     renderNext: function(input) {
-        return $("<div class="prev">prev</div>).insertAfter(input);
+        return $('<span class="next">next</span>').insertAfter(input);
     },
-    disabledClass: 'disabled'
+    disabledClassName: 'disabled'
 });
 ```
 
