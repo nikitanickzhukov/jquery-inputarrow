@@ -1,0 +1,21 @@
+{
+  "devDependencies": {
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^5.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "lodash.assign": "^4.2.0",
+    "path": "^0.12.7",
+    "postcss-preset-env": "^6.5.0",
+    "stylelint": "^9.9.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
