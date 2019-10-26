@@ -1,31 +1,22 @@
 const gulp = require('gulp'),
-    rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     sourcemaps = require('gulp-sourcemaps'),
-    plumber = require('gulp-plumber'),
-    path = require('path'),
-    assign = require('lodash.assign');
-
-const browserify = require('browserify'),
-    babelify = require('babelify'),
-    source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
     uglify = require('gulp-uglify'),
     eslint = require('gulp-eslint');
+
+const path = require('path'),
+    browserify = require('browserify'),
+    babelify = require('babelify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer');
+
 
 const js = {
     dir: '.',
     srcDir: 'src',
-    bundleDir: 'public',
-    projects: {
-        main: {
-            srcFile: 'main.js',
-            bundleFile: 'bundle.js',
-            resultFile: 'jquery.inputarrow.js',
-            files: [
-                'public/bundle.js'
-            ]
-        }
+    project: {
+        srcFile: 'main.js',
+        resultFile: 'jquery.inputarrow.js'
     },
     modes: {
         development: {
@@ -63,44 +54,29 @@ const js = {
 const pass = function() {};
 
 
-function buildES6(mode, project, callback=pass) {
+function buildJS(mode, callback=pass) {
+    console.log('buildJS', mode);
+
     let opts = {
-        entries: [ path.join(js.dir, js.srcDir, js.projects[project].srcFile) ],
+        entries: [ path.join(js.dir, js.srcDir, js.project.srcFile) ],
         paths: [ path.join(js.dir, js.srcDir) ],
         transform: [ babelify.configure(js.babelifyOptions) ],
         debug: true
     };
-    let bundler = browserify(opts);
+    let bundler = browserify(opts),
+        stream = bundler.bundle();
 
-    function rebundle() {
-        console.log('buildES6', mode, project);
-
-        let stream = bundler.bundle();
-        return stream.on('error', console.error)
-            .pipe(source(js.projects[project].bundleFile))
-            .pipe(buffer())
-            .pipe(gulp.dest(path.join(js.dir, js.bundleDir)))
-            .on('end', callback);
-    }
-    bundler.on('update', function() {
-        rebundle();
-    });
-    bundler.on('log', console.log);
-    return rebundle();
-}
-function buildJS(mode, project, callback=pass) {
-    console.log('buildJS', mode, project);
-
-    return gulp.src(js.projects[project].files, { cwd: js.dir })
+    return stream.on('error', console.error).on('log', console.log)
+        .pipe(source(js.project.resultFile))
+        .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(concat(js.projects[project].resultFile))
         .pipe(uglify(js.modes[mode].uglifyOptions))
         .pipe(sourcemaps.write(js.modes[mode].mapDir, js.modes[mode].mapOptions))
         .pipe(gulp.dest(path.join(js.dir, js.modes[mode].resultDir)))
         .on('end', callback);
 }
-function lintES6() {
-    console.log('lintES6');
+function lintJS(callback=pass) {
+    console.log('lintJS');
 
     let files = [
         path.join(js.dir, js.srcDir, '**', '*.js')
@@ -108,24 +84,18 @@ function lintES6() {
 
     return gulp.src(files)
         .pipe(eslint(js.lintOptions))
-        .pipe(eslint.format());
+        .pipe(eslint.format())
+        .on('end', callback);
 }
 
 
-gulp.task('public', function() {
-    for (let project in js.projects) {
-        buildES6('development', project, () => {
-            buildJS('development', project);
-        });
-    }
+gulp.task('public', function(done) {
+    buildJS('development', done);
 });
-gulp.task('dist', function() {
-    for (let project in js.projects) {
-        buildES6('production', project, () => {
-            buildJS('production', project);
-        });
-    }
+gulp.task('dist', function(done) {
+    buildJS('production', done);
 });
-gulp.task('lint', function() {
-    lintES6();
+gulp.task('build', gulp.parallel('public', 'dist'));
+gulp.task('lint', function(done) {
+    lintJS(done);
 });

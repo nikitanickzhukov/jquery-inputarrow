@@ -27,7 +27,7 @@
         interval: 120
     };
 
-    let prop = (window.Symbol !== undefined) ? window.Symbol('inputarrow') : '__inputarrow';
+    let prop = window.Symbol ? window.Symbol('inputarrow') : '__inputarrow';
 
 
     /** Class representing an inputarrow handler. */
@@ -87,8 +87,6 @@
          * @param {number} k - coefficient (-1 for decrementing, +1 for incrementing).
          */
         count(k) {
-            console.log('count', k);
-
             let value = this.getValue();
             let newValue = this.__round(value + k * this.opt.step);
 
@@ -97,8 +95,6 @@
             } else if (newValue > this.opt.max) {
                 newValue = this.opt.max;
             }
-
-            console.log('old value:', value, 'new value:', newValue);
 
             if (newValue !== value) {
                 this.setValue(newValue);
@@ -116,8 +112,6 @@
         startCounting(k) {
             this.__isStarted = true;
             this.__delayTimer = setTimeout(() => {
-                console.log('startCounting', k);
-
                 this.__isCounting = true;
                 this.__oldValue = this.__currentValue = this.getValue();
                 this.__currentGrad = this.opt.gradientDefault;
@@ -135,8 +129,6 @@
             this.__clearCounting();
 
             if (this.__isCounting) {
-                console.log('stopCounting');
-
                 this.__isCounting = false;
                 clearInterval(this.__incTimer);
 
@@ -170,8 +162,6 @@
             }
 
             let value = this.getValue();
-
-            console.log('old value:', value, 'new value', newValue);
 
             if (newValue !== value) {
                 this.setValue(newValue);
@@ -267,8 +257,6 @@
         check() {
             let value = this.getValue();
 
-            console.log('check:', value);
-
             if (value <= this.opt.min) {
                 this.$prev.addClass(this.opt.disabledClassName);
             } else {
@@ -294,8 +282,6 @@
          * @public
          */
         destroy() {
-            console.log('destroy');
-
             this.$input.off('change', this.__checkChange);
             this.$prev.remove();
             this.$next.remove();
@@ -332,7 +318,9 @@
                     }
                 }
 
-                if (value.length === 1) {
+                if (this.length === 0) {
+                    return undefined;
+                } else if (this.length === 1) {
                     return value[0];
                 } else {
                     return value;

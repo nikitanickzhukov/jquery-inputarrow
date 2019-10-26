@@ -1,27 +1,29 @@
-(function e(t, n, r) {
-    function s(o, u) {
-        if (!n[o]) {
-            if (!t[o]) {
-                var a = typeof require == "function" && require;
-                if (!u && a) return a(o, !0);
-                if (i) return i(o, !0);
-                var f = new Error("Cannot find module '" + o + "'");
-                throw f.code = "MODULE_NOT_FOUND", f;
+(function() {
+    function r(e, n, t) {
+        function o(i, f) {
+            if (!n[i]) {
+                if (!e[i]) {
+                    var c = "function" == typeof require && require;
+                    if (!f && c) return c(i, !0);
+                    if (u) return u(i, !0);
+                    var a = new Error("Cannot find module '" + i + "'");
+                    throw a.code = "MODULE_NOT_FOUND", a;
+                }
+                var p = n[i] = {
+                    exports: {}
+                };
+                e[i][0].call(p.exports, function(r) {
+                    var n = e[i][1][r];
+                    return o(n || r);
+                }, p, p.exports, r, e, n, t);
             }
-            var l = n[o] = {
-                exports: {}
-            };
-            t[o][0].call(l.exports, function(e) {
-                var n = t[o][1][e];
-                return s(n ? n : e);
-            }, l, l.exports, e, t, n, r);
+            return n[i].exports;
         }
-        return n[o].exports;
+        for (var u = "function" == typeof require && require, i = 0; i < t.length; i++) o(t[i]);
+        return o;
     }
-    var i = typeof require == "function" && require;
-    for (var o = 0; o < r.length; o++) s(r[o]);
-    return s;
-})({
+    return r;
+})()({
     1: [ function(require, module, exports) {
         "use strict";
         var _createClass = function() {
@@ -69,7 +71,7 @@
                 delay: 300,
                 interval: 120
             };
-            var prop = window.Symbol !== undefined ? window.Symbol("inputarrow") : "__inputarrow";
+            var prop = window.Symbol ? window.Symbol("inputarrow") : "__inputarrow";
             var InputArrow = function() {
                 function InputArrow(input, options) {
                     var _this = this;
@@ -114,7 +116,6 @@
                 _createClass(InputArrow, [ {
                     key: "count",
                     value: function count(k) {
-                        console.log("count", k);
                         var value = this.getValue();
                         var newValue = this.__round(value + k * this.opt.step);
                         if (newValue < this.opt.min) {
@@ -122,7 +123,6 @@
                         } else if (newValue > this.opt.max) {
                             newValue = this.opt.max;
                         }
-                        console.log("old value:", value, "new value:", newValue);
                         if (newValue !== value) {
                             this.setValue(newValue);
                             this.$input.trigger("change");
@@ -137,7 +137,6 @@
                         var _this2 = this;
                         this.__isStarted = true;
                         this.__delayTimer = setTimeout(function() {
-                            console.log("startCounting", k);
                             _this2.__isCounting = true;
                             _this2.__oldValue = _this2.__currentValue = _this2.getValue();
                             _this2.__currentGrad = _this2.opt.gradientDefault;
@@ -151,7 +150,6 @@
                     value: function stopCounting() {
                         this.__clearCounting();
                         if (this.__isCounting) {
-                            console.log("stopCounting");
                             this.__isCounting = false;
                             clearInterval(this.__incTimer);
                             var value = this.getValue();
@@ -177,7 +175,6 @@
                             stop = true;
                         }
                         var value = this.getValue();
-                        console.log("old value:", value, "new value", newValue);
                         if (newValue !== value) {
                             this.setValue(newValue);
                             this.check();
@@ -253,7 +250,6 @@
                     key: "check",
                     value: function check() {
                         var value = this.getValue();
-                        console.log("check:", value);
                         if (value <= this.opt.min) {
                             this.$prev.addClass(this.opt.disabledClassName);
                         } else {
@@ -273,7 +269,6 @@
                 }, {
                     key: "destroy",
                     value: function destroy() {
-                        console.log("destroy");
                         this.$input.off("change", this.__checkChange);
                         this.$prev.remove();
                         this.$next.remove();
@@ -311,7 +306,9 @@
                                 throw new Error("Can't call " + arg + ": InputArrow is not initialized");
                             }
                         }
-                        if (value.length === 1) {
+                        if (this.length === 0) {
+                            return undefined;
+                        } else if (this.length === 1) {
                             return value[0];
                         } else {
                             return value;

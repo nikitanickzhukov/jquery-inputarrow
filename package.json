@@ -1,20 +1,28 @@
 {
+  "name": "jquery-inputarrow",
+  "version": "1.0.0",
+  "description": "jQuery plugin for flexible number input arrows",
+  "main": "gulpfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikitanickzhukov/jquery-inputarrow.git"
+  },
+  "author": "Nikita N. Zhukov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nikitanickzhukov/jquery-inputarrow/issues"
+  },
+  "homepage": "https://github.com/nikitanickzhukov/jquery-inputarrow#readme",
   "devDependencies": {
-    "babelify": "^10.0.0",
-    "browserify": "^16.2.3",
-    "gulp": "^3.9.1",
-    "gulp-clean-css": "^4.0.0",
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^7.3.0",
+    "browserify": "^16.5.0",
+    "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
-    "gulp-eslint": "^5.0.0",
-    "gulp-plumber": "^1.2.1",
-    "gulp-postcss": "^8.0.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-uglify": "^3.0.1",
-    "lodash.assign": "^4.2.0",
+    "gulp-eslint": "^6.0.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
     "path": "^0.12.7",
-    "postcss-preset-env": "^6.5.0",
-    "stylelint": "^9.9.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   }
