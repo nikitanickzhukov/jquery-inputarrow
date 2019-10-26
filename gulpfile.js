@@ -82,10 +82,10 @@ function lintJS(callback=pass) {
         path.join(js.dir, js.srcDir, '**', '*.js')
     ];
 
-    return gulp.src(files)
+    gulp.src(files)
         .pipe(eslint(js.lintOptions))
-        .pipe(eslint.format())
-        .on('end', callback);
+        .pipe(eslint.format());
+    callback();
 }
 
 
