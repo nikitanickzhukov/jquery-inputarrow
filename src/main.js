@@ -45,7 +45,7 @@
             this.$prev = this.opt.renderPrev.call(this, this.input);
             this.$next = this.opt.renderNext.call(this, this.input);
 
-            this.$prev.on('mousedown touchstart', () => {
+            this.$prev.on('mousedown', () => {
                 this.startCounting(-1);
             }).on('mouseup mouseout touchend', () => {
                 if (this.__isStarted) {
@@ -58,7 +58,7 @@
                 }
             });
 
-            this.$next.on('mousedown touchstart', () => {
+            this.$next.on('mousedown', () => {
                 this.startCounting(1);
             }).on('mouseup mouseout touchend', () => {
                 if (this.__isStarted) {
