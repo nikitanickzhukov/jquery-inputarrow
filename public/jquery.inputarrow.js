@@ -81,9 +81,11 @@
                     this.$input = $(this.input);
                     this.$prev = this.opt.renderPrev.call(this, this.input);
                     this.$next = this.opt.renderNext.call(this, this.input);
-                    this.$prev.on("mousedown touchstart", function() {
-                        _this.startCounting(-1);
-                    }).on("mouseup mouseout touchend", function() {
+                    this.$prev.on(this.__getTouchStartEvent(), function() {
+                        if (!_this.__isStarted) {
+                            _this.startCounting(-1);
+                        }
+                    }).on(this.__getTouchEndEvent(), function() {
                         if (_this.__isStarted) {
                             if (_this.__isCounting) {
                                 _this.stopCounting();
@@ -93,9 +95,11 @@
                             }
                         }
                     });
-                    this.$next.on("mousedown touchstart", function() {
-                        _this.startCounting(1);
-                    }).on("mouseup mouseout touchend", function() {
+                    this.$next.on(this.__getTouchStartEvent(), function() {
+                        if (!_this.__isStarted) {
+                            _this.startCounting(1);
+                        }
+                    }).on(this.__getTouchEndEvent(), function() {
                         if (_this.__isStarted) {
                             if (_this.__isCounting) {
                                 _this.stopCounting();
@@ -160,6 +164,21 @@
                                 }
                             }
                         }
+                    }
+                }, {
+                    key: "__getTouchStartEvent",
+                    value: function __getTouchStartEvent() {
+                        return this.__isTouchDevice() ? "touchstart" : "mousedown";
+                    }
+                }, {
+                    key: "__getTouchEndEvent",
+                    value: function __getTouchEndEvent() {
+                        return this.__isTouchDevice() ? "touchend" : "mouseup mouseout";
+                    }
+                }, {
+                    key: "__isTouchDevice",
+                    value: function __isTouchDevice() {
+                        return "ontouchstart" in window || navigator.msMaxTouchPoints;
                     }
                 }, {
                     key: "__iterateCounting",

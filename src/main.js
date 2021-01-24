@@ -45,9 +45,11 @@
             this.$prev = this.opt.renderPrev.call(this, this.input);
             this.$next = this.opt.renderNext.call(this, this.input);
 
-            this.$prev.on('mousedown touchstart', () => {
-                this.startCounting(-1);
-            }).on('mouseup mouseout touchend', () => {
+            this.$prev.on(this.__getTouchStartEvent(), () => {
+                if (!this.__isStarted) {
+                    this.startCounting(-1);
+                }
+            }).on(this.__getTouchEndEvent(), () => {
                 if (this.__isStarted) {
                     if (this.__isCounting) {
                         this.stopCounting();
@@ -58,9 +60,11 @@
                 }
             });
 
-            this.$next.on('mousedown touchstart', () => {
-                this.startCounting(1);
-            }).on('mouseup mouseout touchend', () => {
+            this.$next.on(this.__getTouchStartEvent(), () => {
+                if (!this.__isStarted) {
+                    this.startCounting(1);
+                }
+            }).on(this.__getTouchEndEvent(), () => {
                 if (this.__isStarted) {
                     if (this.__isCounting) {
                         this.stopCounting();
@@ -141,6 +145,30 @@
                     }
                 }
             }
+        }
+        /**
+         * Get event(s) which must be used as a touch start for controls.
+         * @private
+         * @return {string} The event name (or names separated by spaces).
+         */
+        __getTouchStartEvent() {
+            return this.__isTouchDevice() ? 'touchstart' : 'mousedown';
+        }
+        /**
+         * Get event(s) which must be used as a touch end for controls.
+         * @private
+         * @return {string} The event name (or names separated by spaces).
+         */
+        __getTouchEndEvent() {
+            return this.__isTouchDevice() ? 'touchend' : 'mouseup mouseout';
+        }
+        /**
+         * Returns true if we must operate touch events for mobile devices, false otherwise.
+         * @private
+         * @return {boolean} The value.
+         */
+        __isTouchDevice() {
+            return ('ontouchstart' in window) || navigator.msMaxTouchPoints;
         }
         /**
          * Process incrementing or decrementing value for each iteration.
